@@ -1,6 +1,6 @@
 <h1 align="center">W3 Wallet Creation</h1>
 
-Made by [@freakcollections](t.me/freakcollections) team
+Made by [@freakcollections](https://t.me/freakcollections) team
 
 ---
 
