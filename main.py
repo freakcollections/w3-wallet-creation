@@ -1,4 +1,5 @@
 from web3.auto import w3
+from bip_utils import Bip39WordsNum, Bip39MnemonicGenerator
 import pandas as pd
 import time
 import os
@@ -7,14 +8,16 @@ import os
 def create_wallet(count):
     wallet_list = []
     for _ in range(0, count):
-        wallet = w3.eth.account.create()
+        mnemonic = str(Bip39MnemonicGenerator().FromWordsNumber(Bip39WordsNum.WORDS_NUM_12))
+        w3.eth.account.enable_unaudited_hdwallet_features()
+        wallet = w3.eth.account.from_mnemonic(mnemonic)
         wallet_list.append({
             'Address':wallet.address,
-            'PrivateKey':wallet.privateKey.hex()
+            'PrivateKey':wallet.privateKey.hex(),
+            'Mnemonic':mnemonic
         })
     print(f'\nSuccesfully generated {count} wallets\n')
     df = pd.DataFrame(data=wallet_list)
-    df.index += 1
     return df
 
 
@@ -38,6 +41,7 @@ if __name__ == '__main__':
             df.index += start_row - 1
             df.to_excel(writer, sheet_name='Wallets', startrow=start_row, header=False)
     else:
+        df.index += 1
         df.to_excel('wallets.xlsx', sheet_name='Wallets')
 
     print(f'Added {count} rows to {cur_dir}')
